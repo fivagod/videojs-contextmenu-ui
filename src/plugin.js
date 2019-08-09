@@ -38,6 +38,13 @@ function findMenuPosition(pointerPosition, playerSize) {
  */
 function onContextMenu(e) {
 
+  if (typeof this.contextmenuUI.view === 'function') {
+    this.contextmenuUI.view.bind(this)();
+  } else if (this.contextmenuUI.view === false) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  }
   // If this event happens while the custom menu is open, close it and do
   // nothing else. This will cause native contextmenu events to be intercepted
   // once again; so, the next time a contextmenu event is encountered, we'll
@@ -137,6 +144,7 @@ function contextmenuUI(options) {
 
   cmui.onContextMenu = videojs.bind(this, onContextMenu);
   cmui.content = options.content;
+  cmui.view = options.view;
   cmui.keepInside = options.keepInside;
   cmui.VERSION = VERSION;
 
